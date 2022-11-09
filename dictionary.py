@@ -23,9 +23,7 @@ def main():
     words = file_load(FILENAME)
 
     # Print list of words
-    print(words)
-
-    print("hello!")
+    print(f"words = {words}")
 
     # Save dictionary
     file_save(words, FILENAME)
@@ -89,6 +87,9 @@ def file_save(list, path):
 
         # Get a dict writer to the file
         writer = csv.DictWriter(file, fieldnames=['word', 'meaning'])
+
+        # Write fieldnames as headers in the file
+        writer.writeheader()
 
         # For each word-meaning pair in the list...
         for row in list:
