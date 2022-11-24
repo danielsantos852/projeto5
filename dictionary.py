@@ -14,14 +14,15 @@ from csv import DictReader, DictWriter  # ...for CSV file-handling
 from difflib import get_close_matches   # ...for word searching
 
 # Define constants
-PATH_TO_CSV_FILE = "dictionary.csv"  # Path to dictionary
+PATH_TO_CSV_FILE = "dictionary.csv"     # Path to dictionary
 
 
-# Main Function
 def main():
+    
+    ''' Main function. '''
 
     # Load dictionary from CSV file
-    dictionary = file_load(path=PATH_TO_CSV_FILE)
+    aurelio = file_load(path=PATH_TO_CSV_FILE)
 
     # Create infinite loop
     while True:
@@ -29,80 +30,74 @@ def main():
         # Clear the screen
         screen_clear()
 
-        # Print program menu
+        # Print options menu
         print_menu()
 
         # Prompt user for option
-        try:
-            option = int(input('Select an option: '))
-        except ValueError:
-            option = 0
+        option = get_user_option()
 
-        # While invalid option:
-        while option not in [1, 2, 3, 4, 5, 6, 7, 8, 9]:
+        # While option not valid:
+        while option not in [1, 2, 3, 4, 5, 6, 7, 8, 0]:
 
             # Re-prompt user for option
-            try:
-                option = int(input('Invalid option. Select an option:'))
-            except ValueError:
-                option = 0
+            option = get_user_option()
 
-        # Blank line
+        # Print a blank line
         print()
 
-        # If "List words" selected:
+        # If "List all words" selected:
         if option == 1:
 
-            # Call list keys function
-            dictionary_keys_list_all(dictionary=dictionary)
+            # Call list all keys function
+            dictionary_keys_list_all(dictionary=aurelio)
 
-        # Else, if "Search word by letter" selected:
+        # Else, if "Search word by character" selected:
         elif option == 2:
 
-            # Call search by letter function
-            dictionary_keys_search_by_character(dictionary=dictionary)
+            # Call search words by character function
+            dictionary_keys_search_by_character(dictionary=aurelio)
 
         # Else, if "Search word by syllable" selected:
         elif option == 3:
 
-            # Call search by syllable function
-            dictionary_keys_search_by_syllable(dictionary=dictionary)
+            # Call search words by syllable function
+            dictionary_keys_search_by_syllable(dictionary=aurelio)
 
         # Else, if "Search whole word" selected:
         elif option == 4:
 
             # Call search whole word function
-            dictionary_keys_search_whole_word(dictionary=dictionary)
+            dictionary_keys_search_whole_word(dictionary=aurelio)
 
         # Else, if "Add new word-meaning" selected:
         elif option == 5:
 
             # Call add key function
-            dictionary_key_add(dictionary=dictionary)
+            dictionary_key_add(dictionary=aurelio)
 
         # Else, if "Update word" selected:
         elif option == 6:
 
             # Call update key function
-            dictionary_key_update(dictionary=dictionary)
+            dictionary_key_update(dictionary=aurelio)
 
         # Else, if "Update meaning" selected:
         elif option == 7:
 
             # Call update value function
-            dictionary_value_update(dictionary=dictionary)
+            dictionary_value_update(dictionary=aurelio)
 
         # Else, if "Delete word" selected:
         elif option == 8:
 
             # Call delete key function
-            dictionary_key_remove(dictionary=dictionary)
+            dictionary_key_remove(dictionary=aurelio)
 
         # Else ("Exit program" selected):
         else:
 
             # Save dictionary to csv file
-            file_save(dictionary, PATH_TO_CSV_FILE)
+            file_save(aurelio, PATH_TO_CSV_FILE)
 
             # Exit program
             exit('Exiting program...')
@@ -112,29 +107,52 @@ def main():
 
 
 def print_menu() -> None:
+    
     ''' Prints menu on screen. 
         Returns nothing. '''
 
     print("""
-        ===============================
-        | ----  DICTIONARY MENU  ---- |
-        ===============================
-        1. List all words
-        2. Search word (by letter)
-        3. Search word (by syllable)
-        4. Search whole word
+===============================
+| ----  DICTIONARY MENU  ---- |
+===============================
+1. List all words
+2. Search word (by character)
+3. Search word (by syllable)
+4. Search whole word
+
+5. Add new word (and meaning)
+6. Update a word
+7. Update a meaning
+8. Delete a word (and meaning)
+
+0. Exit program
+===============================
+    """)
+
+
+def get_user_option() -> int:
+    
+    ''' Prompts user for an integer.
+        Returns an integer. '''
         
-        5. Add new word (and meaning)
-        6. Update a word
-        7. Update a meaning
-        9. Delete a word (and meaning)
+    # Try this:
+    try:
         
-        9. Exit program
-        ===============================
-        """)
+        # Prompt user for option
+        option = int(input('Select an option: '))
+        
+    # If ValueError exception raised:
+    except ValueError:
+        
+        # Set option to -1
+        option = -1
+    
+    # Return option
+    return option
 
 
 def dictionary_keys_list_all(dictionary: dict) -> None:
+    
     ''' Prints all keys of input dict on screen. 
         Returns nothing. '''
 
@@ -149,50 +167,57 @@ def dictionary_keys_list_all(dictionary: dict) -> None:
 
 
 def dictionary_keys_search_by_character(dictionary: dict) -> None:
+    
     ''' Searches a key by character in input dict. 
-        Returns nothing? '''
+        Prints a sorted list of keys that match search character. 
+        Returns nothing. '''
 
     # Print a header
-    print("SEARCH WORD BY LETTER: \n")
+    print('SEARCH WORD BY CHARACTER:',end='\n\n')
 
-    letter = input("Input letter to search: ").strip().lower()
+    # Prompt user for search character
+    character = input('Input character for search: ').strip().lower()
 
-    while len(letter) > 1:
+    # While character not valid:
+    while (len(character)!=1) or (character.isalpha()==False):
 
-        letter = input('Enter a single character to search: ')
+        # Print error message
+        print('ERROR: Input must be single, alphabetic character. ',end='')
 
-    words = [key for key, value in dictionary.items() if letter in key]
-    words.sort()
-    n_words = [word.capitalize() for word in words]
-    new_line = "\n"
-    if len(words) != 0:
-        print(f"\nThese are the results:{new_line}{new_line.join(n_words)}")
-    else:
-        print("Sorry we couldn't find any word that matched your search.")
+        # Re-prompt user for search letter
+        character = input('Input character for search: ').strip().lower()
 
-    # ans = input(
-    #     "\nWould you like to check one of these words? (Y/N) ").strip().lower()
-    # while ans not in ["y", "n"]:
-
-    #     ans = input(
-    #         'Invalid option. Would you like to check one of these words? (Y/N) ')
-
-    # if ans == "y":
-    #     print('\nChoose one of the words:\n')
-    #     for a, b in enumerate(words, 1):
-    #         print(f'{a} {b}')
-
-    #     option = int(input())
+    # Create list of words that match search letter
+    results = sorted([key for key in dictionary if key[0]==character])
+    
+    # If no words match the search:
+    if len(results)==0:
+        
+        # Print "No match" message
+        print(f'No words match the search "{character.upper()}".')
+        
+        # Exit function
+        return None
+    
+    # Print "search results" header
+    print('\nSEARCH RESULTS: ')
+    
+    # For each key in results list:
+    for key in results:
+        
+        # Print key
+        print(key)
 
 
 def dictionary_keys_search_by_syllable(dictionary: dict) -> None:
+    
     ''' Searches a key by syllable in input dict. 
-        Returns nothing? '''
+        Returns nothing. '''
 
     # Print a header
-    print('SEARCH WORD BY SYLLABLE:\n')
+    print('SEARCH WORD BY SYLLABLE:',end='\n\n')
 
-    letter = input("Input syllable to search: ").strip().lower()
+    letter = input('Input syllable to search: ').strip().lower()
     words = [key for key, value in dictionary.items() if letter in key]
     words.sort()
     n_words = [word.capitalize() for word in words]
@@ -204,7 +229,11 @@ def dictionary_keys_search_by_syllable(dictionary: dict) -> None:
 
 
 def dictionary_keys_search_whole_word(dictionary: dict) -> None:
-    print('SEARCH WHOLE WORD:')
+
+    # ADD A DOCSTRING
+
+    # Print a header
+    print('SEARCH WHOLE WORD:',end='\n\n')
 
     # Prompt user for search key
     key = input("Input word to search: ").strip().lower()
@@ -231,6 +260,7 @@ def dictionary_keys_search_whole_word(dictionary: dict) -> None:
 
 
 def dictionary_key_add(dictionary: dict) -> dict:
+    
     ''' Adds a new key:value pair to input dict. 
         Returns updated dict. '''
 
@@ -248,6 +278,7 @@ def dictionary_key_add(dictionary: dict) -> dict:
 
 
 def dictionary_key_update(dictionary: dict) -> dict:
+    
     ''' Copies value from old key to new key in input dict.
         Deletes old key.
         Returns updated dict.'''
@@ -276,6 +307,7 @@ def dictionary_key_update(dictionary: dict) -> dict:
 
 
 def dictionary_key_remove(dictionary: dict) -> dict:
+    
     ''' Deletes a key-value pair from input dict.
         Returns updated dict. '''
 
@@ -300,6 +332,7 @@ def dictionary_key_remove(dictionary: dict) -> dict:
 
 
 def dictionary_value_update(dictionary: dict) -> dict:
+    
     ''' Replaces the value of a key in input dict.
         Returns updated dict. '''
 
@@ -327,6 +360,7 @@ def dictionary_value_update(dictionary: dict) -> dict:
 
 
 def file_load(path: str) -> dict:
+    
     ''' Loads the contents of a CSV file to a dict.
         Returns created dict'''
 
@@ -350,6 +384,7 @@ def file_load(path: str) -> dict:
 
 
 def file_save(dictionary: dict, path: str) -> None:
+    
     ''' Creates a CSV file and copies content of input dict to it. 
         Returns nothing. '''
 
@@ -370,6 +405,7 @@ def file_save(dictionary: dict, path: str) -> None:
 
 
 def screen_clear() -> None:
+    
     ''' Clears the screen.
         Returns nothing. '''
 
@@ -387,12 +423,14 @@ def screen_clear() -> None:
 
     # Else (unidentified OS):
     else:
-
+        
         # Print "Can't identify OS" error message
         print('\nERROR: Could not identify OS. \
             Screen clearing disabled.', end='\n\n')
 
 
-# Call main function
+# If this file is being run as a script:
 if __name__ == "__main__":
+    
+    # Call main function
     main()
