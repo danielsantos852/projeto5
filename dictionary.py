@@ -1,12 +1,3 @@
-# 5. Dicionário eletrônico (Aurélio) - Requisitos mínimos:
-#   - (OK) Cadastrar palavras e significados novos;
-#   - (TO DO) Implementar uma estratégia de pesquisa de palavras por letra e sílabas;
-#   - (OK) Implementar uma estratégia de exibição das palavras cadastradas;
-#   - (OK) Implementar uma estratégia de atualização das palavras e significados cadastrados;
-#   - (TO DO) Criar mensagens de erro para controlar possíveis entradas inconsistentes do usuário;
-#   - (OK) Implementar uma estratégia de exclusão das palavras cadastradas; e
-#   - (OK) Bônus: Criar uma estratégia para salvar os dados da agenda em um arquivo.
-
 # Import libraries/functions
 from os import system, name             # ...for screen clearing
 from sys import exit                    # ...for program exiting
@@ -169,7 +160,7 @@ def dictionary_print_key_and_value(dictionary: dict) -> None:
             print(f'\n{key}: {dictionary[key]}')
             
             # Exit function
-            return None
+            break
             
         # Else
         else:
@@ -187,7 +178,7 @@ def dictionary_print_key_and_value(dictionary: dict) -> None:
                 continue
                 
             # Exit function
-            return None
+            break
 
 
 def dictionary_keys_list_all(dictionary: dict) -> None:
@@ -368,7 +359,7 @@ def dictionary_key_update(dictionary: dict) -> dict:
     del dictionary[key_old]
 
     # Return dictionary
-    return dict
+    return dictionary
 
 
 def dictionary_value_update(dictionary: dict) -> dict:
