@@ -97,7 +97,7 @@ def main():
             file_save(aurelio, FILE_PATH)
 
             # Exit program
-            exit('Exiting program...')
+            exit('\nExiting program...')
 
         # Halt program until user presses any key
         input('\nOperation complete! Press any key to continue...')
@@ -166,7 +166,7 @@ def dictionary_print_key_and_value(dictionary: dict) -> None:
         if key in dictionary:
             
             # Print word and definition
-            print(f'{key}: {dictionary[key]}')
+            print(f'\n{key}: {dictionary[key]}')
             
             # Exit function
             return None
@@ -175,7 +175,7 @@ def dictionary_print_key_and_value(dictionary: dict) -> None:
         else:
             
             # Print "word not found" message
-            print(f'Word {key} not found in dictionary.')
+            print(f'Word "{key}" not found in dictionary.',end='')
             
             # Prompt user for retry
             answer = input('Try again? ').strip().lower()
@@ -242,7 +242,7 @@ def dictionary_keys_search_by_character(dictionary: dict) -> None:
     if len(results)==0:
         
         # Print "No match" message
-        print(f'No words match the search: {character.upper()}.')
+        print(f'No words match the search "{character.upper()}".')
         
         # Exit function
         return None
@@ -279,7 +279,7 @@ def dictionary_keys_search_by_syllable(dictionary: dict) -> None:
     syllable = input('Input search syllable: ').strip().lower()
     
     # While syllable not valid
-    while (len(syllable)<2) or (len(syllable)>5) or (syllable.isalpha()==False):
+    while (len(syllable)<1) or (len(syllable)>5) or (syllable.isalpha()==False):
 
         # Print error message
         print('ERROR: Input must be 2-5, alphabetic characters long. ',end='')
@@ -288,13 +288,13 @@ def dictionary_keys_search_by_syllable(dictionary: dict) -> None:
         syllable = input('Input search syllable: ').strip().lower()
     
     # Create list of results
-    results = sorted([key for key in dictionary if syllable==key[0:len(syllable)-1]])
+    results = sorted([key for key in dictionary if syllable==key[0:len(syllable)]])
 
 # If no words match the search:
     if len(results)==0:
         
         # Print "No match" message
-        print(f'No words match the search: {syllable.upper()}.')
+        print(f'No words match the search "{syllable.upper()}".')
         
         # Exit function
         return None
